@@ -83,7 +83,7 @@
                   <a href="/" class="lastTime">{{setTimer(listItem.last_reply_at)}}</a>
                 </div>
             </div>
-          <Pages v-on:getIndex='getPageIndex' :pageVal="pageVal"></Pages>
+          <Pages v-on:getIndex='getPageIndex' :pageVal="pageVal" ref="pageControl"></Pages>
         </div>
       </div>
   </div>
@@ -101,13 +101,13 @@ module.exports = {
   },
   methods:{
     changeActive:function(index,tab,page){
-      console.log(index,tab,page)
       page = page || 1; 
       var that =this;
       that.defaultActive =index;
       that.$http({method:'get',url:'https://cnodejs.org/api/v1/topics',params:{page:page,tab:tab,limit:40,mdrender:"false"}})
       .then((res)=>{that.list = res.data.data;})
       .catch((error)=>console.log(error));
+      this.$refs.pageControl.firstPage();
     },
     setTimer:(time)=>{
        const now =new Date().getTime();
@@ -146,13 +146,16 @@ module.exports = {
       }
     },
     getPageIndex:function(data){
-      this.changeActive(this.defaultActive,this.type[this.defaultActive].tab,data.current);
+      var that =this;
+      that.$http({method:'get',url:'https://cnodejs.org/api/v1/topics',params:{page:data.current,tab:this.type[that.defaultActive].tab,limit:40,mdrender:"false"}})
+      .then((res)=>{that.list = res.data.data;})
+      .catch((error)=>console.log(error));
     }
   },
   created:function(){
       var that =this;
       that.$http({method:'get',url:'https://cnodejs.org/api/v1/topics',params:{page:1,tab:'',limit:40,mdrender:"false"}})
-      .then((res)=>{that.list = res.data.data;console.log(res)})
+      .then((res)=>{that.list = res.data.data;})
       .catch((error)=>console.log(error));
   },
   components:{'Pages':require('./../common/Page.vue')}

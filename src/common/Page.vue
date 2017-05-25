@@ -46,9 +46,7 @@
                }
                 this.$emit('getIndex',this.pageVal);
             }
-        },
-        created:function(){
-        }
+        }   
     }
 </script>
 <style>
