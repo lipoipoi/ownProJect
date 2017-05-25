@@ -75,11 +75,15 @@
                 <div class="cell">
                   <a href="/"><img :src="listItem.author.avatar_url" class="lellansin" alt="" :title="listItem.author.loginname"></a>
                   <span class="reply_count"><span class="countOfReplies">{{listItem.reply_count}}</span>/<span class="countOfvisits">{{listItem.visit_count}}</span></span>
-                  <span v-if="listItem.top" class="replay_top">置顶</span><span v-else :class="listItem.good?'replay_top':'replay_type'">{{listItem.good?'精华':getAllName(listItem.tab)}}</span>
+                  <span v-if="listItem.top" class="replay_top">置顶</span>
+                  <span v-else>
+                    <span v-if="listItem.tab" :class="listItem.good?'replay_top':'replay_type'">{{listItem.good?'精华':getAllName(listItem.tab)}}</span>
+                    </span>
                   <a href="/" class="replay_title">{{listItem.title}}</a>
                   <a href="/" class="lastTime">{{setTimer(listItem.last_reply_at)}}</a>
                 </div>
             </div>
+          <Pages v-on:getIndex='getPageIndex' :pageVal="pageVal"></Pages>
         </div>
       </div>
   </div>
@@ -91,15 +95,18 @@ module.exports = {
     return {
       type:[{name:'全部',tab:""},{name:'精华',tab:"good"},{name:'分享',tab:'share'},{name:'问答',tab:'ask'},{name:'招聘',tab:'job'}],
       defaultActive:0,
-      list:[]
+      list:[],
+      pageVal:{current:1,allPage:400}
     }
   },
   methods:{
-    changeActive:function(index,tab){
+    changeActive:function(index,tab,page){
+      console.log(index,tab,page)
+      page = page || 1; 
       var that =this;
       that.defaultActive =index;
-      that.$http({method:'get',url:'https://cnodejs.org/api/v1/topics',params:{page:1,tab:tab,limit:40,mdrender:"false"}})
-      .then(function(res){that.list = res.data.data;console.log(res)})
+      that.$http({method:'get',url:'https://cnodejs.org/api/v1/topics',params:{page:page,tab:tab,limit:40,mdrender:"false"}})
+      .then((res)=>{that.list = res.data.data;})
       .catch((error)=>console.log(error));
     },
     setTimer:(time)=>{
@@ -134,16 +141,21 @@ module.exports = {
           return '招聘'
           break;
         default :
+          return ''
           break;
       }
+    },
+    getPageIndex:function(data){
+      this.changeActive(this.defaultActive,this.type[this.defaultActive].tab,data.current);
     }
   },
   created:function(){
       var that =this;
       that.$http({method:'get',url:'https://cnodejs.org/api/v1/topics',params:{page:1,tab:'',limit:40,mdrender:"false"}})
-      .then(function(res){that.list = res.data.data;console.log(that.list)})
+      .then((res)=>{that.list = res.data.data;console.log(res)})
       .catch((error)=>console.log(error));
-  }
+  },
+  components:{'Pages':require('./../common/Page.vue')}
 }
 </script>
 
