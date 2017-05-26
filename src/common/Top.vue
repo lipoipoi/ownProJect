@@ -5,7 +5,7 @@
                     <a href="/" class='logo' ><img src="//o4j806krb.qnssl.com/public/images/cnodejs_light.svg" alt=""></a>
                     <input type="text" name="q" value="" class="search">
                     <ul class="pullList">
-                        <li v-for="item in navList"><a href="/">{{item.name}}</a></li>
+                        <li v-for="item in navList"><router-link :to="item.link">{{item.name}}</router-link></li>
                     </ul>
             </div>
         </div>
@@ -14,13 +14,12 @@
 <script>
    export default{
         data(){
-            return {navList:[
-                {name:'首页'},
-                {name:'新手入门'},
-                {name:'API'},
-                {name:'关于'},
-                {name:'注册'},
-                {name:'登录'}]            
+            return {navList:[{name:'首页',link:'/'},
+                {name:'新手入门',link:'/'},
+                {name:'API',link:'/'},
+                {name:'关于',link:'/'},
+                {name:'注册',link:'/'},
+                {name:'登录',link:'/'}]            
         }
         },
         methods:{
