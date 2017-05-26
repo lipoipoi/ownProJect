@@ -48,15 +48,15 @@ module.exports = {
        const now =new Date().getTime();
        const lastTime =new Date(time).getTime();
        if(now-lastTime>60*1000*60*24*365){
-          return Math.floor((now-lastTime)/(60*1000*60*24*365))+'年前'
+          return Math.floor((now-lastTime)/(60*1000*60*24*365))+' 年前'
        }else if(now-lastTime>60*1000*60*24*30){
-          return Math.floor((now-lastTime)/(60*1000*60*24*30))+'月前'
+          return Math.floor((now-lastTime)/(60*1000*60*24*30))+' 个月前'
        }else if(now-lastTime>60*1000*60*24){
-         return Math.floor((now-lastTime)/(60*1000*60*24))+'天前'
+         return Math.floor((now-lastTime)/(60*1000*60*24))+' 天前'
        }else if(now-lastTime>60*1000*60){
-         return Math.floor((now-lastTime)/(60*1000*60))+'小时前'
+         return Math.floor((now-lastTime)/(60*1000*60))+' 小时前'
        }else  if(now-lastTime>60*1000){
-         return Math.ceil((now-lastTime)/(60*1000))+'分钟前'
+         return Math.ceil((now-lastTime)/(60*1000))+' 分钟前'
        }else{
          return '刚刚'
        }

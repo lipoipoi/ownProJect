@@ -14,11 +14,11 @@
                                 {{replyData.title}}
                             </span>
                             <div class="topic_tab">
-                                <span>发布于{{setTimer(replyData.create_at)}}</span>
-                                <span>作者{{replyData.author.loginname}}</span>
-                                <span>{{replyData.visit_count}}次浏览</span>
-                                <span>最后一次编辑是{{setTimer(replyData.last_reply_at)}}</span>
-                                <span>来自{{getAllName(replyData.tab)}}</span>
+                                <span>发布于 {{setTimer(replyData.create_at)}}</span>
+                                <span>作者 {{replyData.author?replyData.author.loginname:''}}</span>
+                                <span>{{replyData.visit_count}} 次浏览</span>
+                                <span>最后一次编辑是 {{setTimer(replyData.last_reply_at)}}</span>
+                                <span>来自 {{getAllName(replyData.tab)}}</span>
                             </div>
                         </div>
                         <div class="innerTopic">
@@ -27,6 +27,7 @@
                             </div>
                         </div>
                     </div>
+                    <Reply :replyCount="replyData.reply_count" :replyData="replyData.replies"></Reply>
                 </div> 
              </div>
       </div>
@@ -42,17 +43,17 @@
             const now =new Date().getTime();
             const lastTime =new Date(time).getTime();
             if(now-lastTime>60*1000*60*24*365){
-                return Math.floor((now-lastTime)/(60*1000*60*24*365))+'年前'
+                return Math.floor((now-lastTime)/(60*1000*60*24*365))+' 年前'
             }else if(now-lastTime>60*1000*60*24*30){
-                return Math.floor((now-lastTime)/(60*1000*60*24*30))+'月前'
+                return Math.floor((now-lastTime)/(60*1000*60*24*30))+' 个月前'
             }else if(now-lastTime>60*1000*60*24){
-                return Math.floor((now-lastTime)/(60*1000*60*24))+'天前'
+                return Math.floor((now-lastTime)/(60*1000*60*24))+' 天前'
             }else if(now-lastTime>60*1000*60){
-                return Math.floor((now-lastTime)/(60*1000*60))+'小时前'
+                return Math.floor((now-lastTime)/(60*1000*60))+' 小时前'
             }else  if(now-lastTime>60*1000){
-                return Math.ceil((now-lastTime)/(60*1000))+'分钟前'
+                return Math.ceil((now-lastTime)/(60*1000))+' 分钟前'
             }else{
-                return '刚刚'
+                return ' 刚刚'
             }
             },
             getAllName:(tab)=>{
@@ -76,12 +77,13 @@
             },  
         },
         created:function(){
+            require('./../css/markdown.css')
             const that = this;
             this.$http({url:'https://cnodejs.org/api/v1/topic/'+this.$route.query.id,method:'get',params:{mdrender:true}})
             .then((res)=>that.replyData=res.data.data)
             .catch((err)=>console.log(err))
         },
-        components:{'SlideBar':require('./../common/SlideBar.vue')}
+        components:{'SlideBar':require('./../common/SlideBar.vue'),'Reply':require('./../common/Reply.vue')}
     }
 </script>
 <style>
@@ -100,11 +102,15 @@
     margin-right: 305px;
 }
 .panel{
-        margin-bottom: 13px;
+    margin-bottom: 13px;
+    border-radius: 3px 3px 3px 3px;
 }
 .topic_header{
     background-color: #fff;
     border-radius: 3px 3px 0 0;
+    line-height: 1em;
+    padding: 0px 0px 10px 0;
+    border-bottom: 1px solid #e5e5e5;
 }
 .topic_full_title{
     font-size: 22px;
@@ -114,12 +120,12 @@
     vertical-align: bottom;
     width: 75%;
     line-height: 130%;
+    font-family: "Helvetica Neue","Luxi Sans","DejaVu Sans",Tahoma,"Hiragino Sans GB",STHeiti,sans-serif!important;
 }
 .put_top {
     background: #80bd01;
     padding: 2px 4px;
     border-radius: 3px;
-    margin-right: 10px;
     -webkit-border-radius: 3px;
     -moz-border-radius: 3px;
     -o-border-radius: 3px;
@@ -127,7 +133,7 @@
     font-size: 12px;
 }
 .topic_tab>span::before{
-    content:"•"
+    content:"• "
 }
 .topic_tab>span{
     font-size: 12px;
@@ -140,13 +146,9 @@
     line-height: 2em;
     background-color: #fff;
     padding: 10px;
-    border-top: 1px solid #e5e5e5;
     border-radius: 0 0 3px 3px;
 }
 .topic_content{
     margin: 0 10px;
-}
-.topic_content img{
-    width: 100%;
 }
 </style>
