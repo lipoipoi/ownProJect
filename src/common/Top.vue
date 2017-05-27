@@ -19,7 +19,7 @@
                 {name:'API',link:'/'},
                 {name:'关于',link:'/'},
                 {name:'注册',link:'/'},
-                {name:'登录',link:'/'}]            
+                {name:'登录',link:'/login'}]            
         }
         },
         methods:{

@@ -10,8 +10,15 @@ export default new Router({
       path: '/',
       name: 'Main',
       component: Main
-    },{
+    },
+    {
         path: '/Detail', component: require('@/components/Detail.vue')
+    },
+    {
+        path: '/login', component: require('@/components/Login.vue')
+    },
+    {
+        path: '/Author', component: require('@/components/Author.vue')
     }
   ]
 })

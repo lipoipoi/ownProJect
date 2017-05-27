@@ -4,7 +4,7 @@
            <li ><a href="javascript:void(0)" @click="firstPage()">«</a></li>
            <li v-if="pageVal.current>3"><a href="javascript:void(0)">...</a></li>
            <li v-for="(item,i) in pageArr"><a href="javascript:void(0)" :class="item==pageVal.current?'pageAcitve':''" @click="goto(item)">{{item}}</a></li>
-           <li v-if="pageVal.allPage-pageVal.current>3"><a href="javascript:void(0)">...</a></li>
+           <li v-if="pageVal.allPage-pageVal.current>=3"><a href="javascript:void(0)">...</a></li>
            <li><a href="javascript:void(0)" @click="lastPage()">»</a></li>
        </ul>
    </div>

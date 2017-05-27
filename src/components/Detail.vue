@@ -9,7 +9,7 @@
                             <span class="topic_full_title">
                                 <span class="put_top" v-if="replyData.top">置顶</span>
                                 <span v-else>
-                                    <span v-if="replyData.good">精华</span>
+                                    <span class="put_top"  v-if="replyData.good">精华</span>
                                 </span>
                                 {{replyData.title}}
                             </span>
@@ -77,7 +77,6 @@
             },  
         },
         created:function(){
-            require('./../css/markdown.css')
             const that = this;
             this.$http({url:'https://cnodejs.org/api/v1/topic/'+this.$route.query.id,method:'get',params:{mdrender:true}})
             .then((res)=>that.replyData=res.data.data)
@@ -87,6 +86,7 @@
     }
 </script>
 <style>
+@import './../css/markdown.css';
 .container{
   min-height:800px;
 }

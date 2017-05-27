@@ -8,7 +8,7 @@
             </div>
             <div class="listInner" v-for="(listItem,i) in list">
                 <div class="cell">
-                  <a href="/"><img :src="listItem.author.avatar_url" class="lellansin" alt="" :title="listItem.author.loginname"></a>
+                  <router-link :to="{path:'Author',query: {author:listItem.author.loginname}}"><img :src="listItem.author.avatar_url" class="lellansin" alt="" :title="listItem.author.loginname"></router-link>
                   <span class="reply_count"><span class="countOfReplies">{{listItem.reply_count}}</span>/<span class="countOfvisits">{{listItem.visit_count}}</span></span>
                   <span v-if="listItem.top" class="replay_top">置顶</span>
                   <span v-else>

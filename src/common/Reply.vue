@@ -7,7 +7,7 @@
                     <a href="/user/ngot" class="user_avatar"><img :src="item.author.avatar_url" title="ngot"></a>
                     <div class="user_info">
                         <a class="dark reply_author" href="/user/ngot">{{item.author.loginname}}</a>
-                        <a class="reply_time" href="#58d0fc1a17f61387400b7e16">{{index+1}}楼•{{setTimer(item.create_at)}}</a>
+                        <a class="reply_time" href="#58d0fc1a17f61387400b7e16">{{index+1}}楼 • {{setTimer(item.create_at)}}</a>
                     </div>
                     <div class="user_action">
                         <i class="fa up_btn fa-thumbs-o-up"></i><span class="up-count">{{item.ups?item.ups.length:''}}</span>
@@ -47,11 +47,11 @@
         },
         props:['replyData','replyCount'],
         created:function(){
-            require('./../css/markdown.css')
         }
     }
 </script>
 <style>
+     @import './../css/markdown.css';
     .penal{
         margin-bottom: 13px;
         font-family: "Helvetica Neue","Luxi Sans","DejaVu Sans",Tahoma,"Hiragino Sans GB",STHeiti,sans-serif!important;
