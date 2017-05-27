@@ -19,6 +19,9 @@ export default new Router({
     },
     {
         path: '/Author', component: require('@/components/Author.vue')
+    },
+    {
+        path: '/Collections', component: require('@/components/Collections.vue')
     }
   ]
 })

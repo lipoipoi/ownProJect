@@ -4,9 +4,9 @@
             <span class="col_fade">{{replyData?replyData.length:""}} 回复</span>
             <div class="reply_cell"  v-for="(item,index) in replyData" :class="index<=2?'reply_highlight':''">
                 <div class="author_detail">
-                    <a href="/user/ngot" class="user_avatar"><img :src="item.author.avatar_url" title="ngot"></a>
+                   <router-link class="user_avatar"  :to="{path:'Author',query: {author:item.author.loginname}}"><img :src="item.author.avatar_url" title="ngot"></router-link>
                     <div class="user_info">
-                        <a class="dark reply_author" href="/user/ngot">{{item.author.loginname}}</a>
+                        <router-link class="dark reply_author" :to="{path:'Author',query: {author:item.author.loginname}}">{{item.author.loginname}}</router-link>
                         <a class="reply_time" href="#58d0fc1a17f61387400b7e16">{{index+1}}楼 • {{setTimer(item.create_at)}}</a>
                     </div>
                     <div class="user_action">
@@ -21,29 +21,14 @@
     </div>
 </template>
 <script>
+    const until = require('./../until/until.js');
     
     module.exports ={
         data:function(){
             return {}
         },
         methods:{
-            setTimer:(time)=>{
-            const now =new Date().getTime();
-            const lastTime =new Date(time).getTime();
-            if(now-lastTime>60*1000*60*24*365){
-                return Math.floor((now-lastTime)/(60*1000*60*24*365))+' 年前'
-            }else if(now-lastTime>60*1000*60*24*30){
-                return Math.floor((now-lastTime)/(60*1000*60*24*30))+' 个月前'
-            }else if(now-lastTime>60*1000*60*24){
-                return Math.floor((now-lastTime)/(60*1000*60*24))+' 天前'
-            }else if(now-lastTime>60*1000*60){
-                return Math.floor((now-lastTime)/(60*1000*60))+' 小时前'
-            }else  if(now-lastTime>60*1000){
-                return Math.ceil((now-lastTime)/(60*1000))+' 分钟前'
-            }else{
-                return ' 刚刚'
-            }
-            },
+            setTimer:(time)=>until.default.setTimer(time),
         },
         props:['replyData','replyCount'],
         created:function(){
@@ -85,8 +70,7 @@
         background-color: #f4fcf0;
     }
     .user_avatar{
-        display: inline-block;
-        float: left;
+        float:left;
     }
     .user_avatar img{
         width: 30px;
