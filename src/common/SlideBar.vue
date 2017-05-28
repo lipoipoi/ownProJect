@@ -1,19 +1,17 @@
 <template>
      <div class="slideBar">
-              <div class="panel">
-                  <p>CNode：Node.js专业中文社区</p>
-                  <div>
-                    您可以
-                      <a href="/signin">登录</a>
-                    或
-                      <a href="/signup">注册</a>
-                    , 也可以
-                      <a href="/auth/github">
-                      <span class="span-info">
-                        通过 GitHub 登录
-                      </span>
-                    </a>
-                  </div>
+              <div class="panel friendship" v-if="isLogin">
+                <div class="header">个人信息</div>
+                <div class="userInfo">
+                    <div class="user_big_avatar">
+                         <router-link :to="{path:'Author',query: {author:userInfo.loginname}}">
+                           <img :src="userInfo.avatar_url" :alt="userInfo.loginname"><span>{{userInfo.loginname}}</span>
+                         </router-link>
+                    </div>
+                    <div class="user_profile">
+                        <p class="score">0 积分</p>
+                    </div>
+                </div>
               </div>
               <div class="panel ads">
                   <a href="http://www.ucloud.cn/site/active/gift.html?utm_source=cnodejs&amp;utm_medium=content_pic_pc&amp;utm_campaign=multicloud&amp;utm_content=gift&amp;ytag=cnodejs" target="_blank" class="banner sponsor_outlink" data-label="ucloud-banner">
@@ -67,10 +65,14 @@
         </div>
 </template>
 <script>
-    module.exports={
-        data:function(){
+    import { mapGetters,mapActions} from 'vuex'
+    export default{
+        data(){
             return{}
-        }
+        },
+        computed:{
+            ...mapGetters(['isLogin','userInfo']),
+        },
     }
 </script>
 <style>
@@ -136,5 +138,53 @@
     vertical-align: middle;
     color: #fff;
     background-color: #5bc0de;
+}
+.header{
+    border-radius: 3px 3px 0 0;
+    padding: 10px;
+    background-color: #f6f6f6;
+    color: #51585c;
+    border-radius: 3px 3px 0 0;
+}
+.userInfo{
+    background-color: #fff;
+    border-radius:0 0 3px 3px ;
+    padding: 10px;
+    border-top: 1px solid #e5e5e5;
+    overflow: hidden;
+}
+.bread_head a{
+    color: #80bd01;
+    text-decoration: none;
+}
+.user_big_avatar{
+    float: left;
+    margin-right: 10px;
+}
+.user_big_avatar::after{
+    clear: both
+}
+.user_big_avatar img{
+    width: 40px;
+    height: 40px;
+    border-radius: 3px;
+    float: left;
+    vertical-align: middle;
+}
+.user_big_avatar span{
+    color: #778087;
+    margin-left: 10px;
+    line-height: 2em;
+}
+.user_profile{
+    clear: both;
+    margin-top: 50px;
+}
+.score{
+    color:#333;
+}
+.penal .otherInfo{
+    color: #778087;
+    text-decoration: none;
 }
 </style>

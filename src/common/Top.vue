@@ -5,21 +5,26 @@
                     <a href="/" class='logo' ><img src="//o4j806krb.qnssl.com/public/images/cnodejs_light.svg" alt=""></a>
                     <input type="text" name="q" value="" class="search">
                     <ul class="pullList">
-                        <li v-for="item in navList"><router-link :to="item.link">{{item.name}}</router-link></li>
+                        <li ><router-link to="/">首页</router-link></li>
+                        <li v-if="isLogin"><a @click='loginOut' href="javascript:void(0)" >注销</a></li>
+                        <li v-else><router-link to="/login">登录</router-link></li>
                     </ul>
             </div>
         </div>
     </div>
 </template>
 <script>
+
+import { mapGetters,mapActions} from 'vuex'
    export default{
         data(){
-            return {navList:[{name:'首页',link:'/'},
-                {name:'登录',link:'/login'}]            
-        }
+            return { }
+        },
+        computed:{
+            ...mapGetters(['isLogin']),
         },
         methods:{
-            
+            ...mapActions(['loginOut'])
         }
     }
 </script>

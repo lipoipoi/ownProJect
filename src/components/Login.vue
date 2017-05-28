@@ -7,7 +7,7 @@
                 <div class="bread_head"><a href="/">主页</a> / 登录</div>
                 <div class="login_form">
                     <p class="loginList"><span class="tokenControl">请输入accessToken登录</span><input v-model="token" type="text" class = 'token'></p>
-                    <p class="loginList"><span class="tokenControl"></span><a @click="goLogin()" href="javascript:void(0)" class="loginBtn">登录</a></p>
+                    <p class="loginList"><span class="tokenControl"></span><a @click="login()" href="javascript:void(0)" class="loginBtn">登录</a></p>
                 </div>
             </div>
         </div>
@@ -16,26 +16,29 @@
     </div>
 </template>
 <script>
-    const vuex = require('vuex');
-    module.exports ={
-        data:function(){
-            return {'token':""}
+    import SlideBar from './../common/SlideBar.vue'
+    import { mapGetters,mapActions} from 'vuex'
+    export default{
+        data(){
+            return {token:''}
         },
-        methods:
-        {
-            goLogin:function(){
-                var that =this;
-                that.$http({method:'POST',url:'https://cnodejs.org/api/v1/accesstoken',params:{accesstoken:this.token}})
-                .then((res)=>{
-                    if(res.statusText){
-                        console.log(res)
-                    }
-                })
-                .catch((error)=>console.log(error));
+        computed:{
+            ...mapGetters(['isLogin']),
+        },
+        methods:{
+            ...mapActions(['goLogin']),
+            login:function(){
+                this.goLogin(this.token)
             }
-        }
-        ,
-        components:{'SlideBar':require('./../common/SlideBar.vue')}
+        },
+        watch:{
+            isLogin:function(newVal,oldVal){
+                if(newVal){
+                    this.$router.push({path:'/'})
+                }
+            }
+        },
+        components:{SlideBar}
     }
 </script>
 <style>
