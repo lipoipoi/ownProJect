@@ -1,4 +1,5 @@
 <template>
+    <div>
     <div class="penal">
         <div class="header">
             <span class="col_fade">{{replyData?replyData.length:""}} 回复</span>
@@ -19,19 +20,47 @@
             </div>
         </div>
     </div>
+    <div class="penal" v-if="isLogin">  
+        <div class="commit">
+            <div class="commitBox">
+                <textarea class="commitVal" v-model="commitData"></textarea>
+                <div class="commitSubmit">
+                    <a href="javascript:void(0)" @click='commit' >评论</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
 </template>
 <script>
-    const until = require('./../until/until.js');
-    
-    module.exports ={
-        data:function(){
-            return {}
+    import until from './../until/until.js';
+    import {mapGetters,mapActions} from 'vuex'
+    export default{
+        data(){
+            return {commitData:''}
+        },
+        computed:{
+            ...mapGetters(['isLogin','token'])
         },
         methods:{
-            setTimer:(time)=>until.default.setTimer(time),
+            setTimer:(time)=>until.setTimer(time),
+            commit:function(){
+                const obj={accesstoken:this.token,content:this.commitData,reply_id:this.id}
+                console.log(obj);
+                this.$http({
+                    method:'post',
+                    url:'https://cnodejs.org/api/v1/topic/'+this.id+'/replies',
+                    params:obj,
+                })
+                .then((res)=>{console.log(res)})
+                .catch((error)=>console.log(error));
+            }
         },
-        props:['replyData','replyCount'],
-        created:function(){
+        props:['replyData','replyCount','id'],
+        created:function(){ 
+
+        },
+        watch:{
         }
     }
 </script>
@@ -114,5 +143,45 @@
     }
     .reply_detail{
         padding-left: 50px;
+    }
+    .commit{
+        margin: 20px 0;
+        padding: 10px;
+        background-color: #f6f6f6;
+    }
+    .commitBox{
+        padding: 10px;
+        background-color:#fff;
+    }
+    .commitVal{
+        resize: none;
+        border-color: #ccc;
+        width: 100%;
+        height: 100px;
+        border-radius: 3px;
+    }
+    .commitSubmit{
+        text-align: right;
+         margin-top: 20px;
+    }
+    .commitSubmit::after{
+        clear: both
+    }
+    .commitSubmit a{
+    display: inline-block;
+    text-decoration: none;
+    padding: 3px 30px;
+    border: none;
+    margin: 0;
+    font-size: 14px;
+    transition: all .2s ease-in-out;
+    cursor: pointer;
+    letter-spacing: 2px;
+    box-shadow: none;
+    border-radius: 3px;
+    line-height: 2em;
+    vertical-align: middle;
+    color: #fff;
+    background-color: #5bc0de;
     }
 </style>

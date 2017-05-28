@@ -27,7 +27,7 @@
                             </div>
                         </div>
                     </div>
-                    <Reply :replyCount="replyData.reply_count" :replyData="replyData.replies"></Reply>
+                    <Reply :id='replyData.id' :replyCount="replyData.reply_count" :replyData="replyData.replies"></Reply>
                 </div> 
              </div>
       </div>

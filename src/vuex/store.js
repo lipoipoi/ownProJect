@@ -1,6 +1,7 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
-import axios from 'axios'
+import axios from 'axios';
+import until from './../until/until'
 Vue.use(Vuex);
 // 需要维护的状态
 const state = {
@@ -67,12 +68,16 @@ const actions ={
         axios({method:'POST',url:'https://cnodejs.org/api/v1/accesstoken',params:{accesstoken:token}})
           .then((content)=>{
             if(content.statusText){
-              commit('LOGIN_IN',{data:token,res:content.data})
+              commit('LOGIN_IN',{data:token,res:content.data});
+              until.addCookie("accesstoken",state.user.userInfo.accessToken,'7','/')
              }
          })
       .catch((error)=>console.log(error));
     },
-    loginOut:({commit})=>commit('LOGIN_OUT'),
+    loginOut:({commit})=>{
+      commit('LOGIN_OUT')
+    until.deleteCookie("accesstoken",'/')
+  },
 // List Actions
     initList:({commit})=>{
       axios({method:'get',url:'https://cnodejs.org/api/v1/topics',params:{page:1,tab:'',limit:40,mdrender:"false"}})
