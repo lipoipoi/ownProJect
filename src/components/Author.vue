@@ -29,13 +29,15 @@
   </div>
 </template>
 <script>
-    const until = require('./../until/until.js');
-    module.exports={
-        data:function(){
+    import  until from './../until/until.js';
+    import SlideBar from './../common/SlideBar.vue';
+    import List from './../common/List.vue';
+    export default{
+        data(){
             return{author:'',collect:''}
         },
         methods:{
-            setTimer:(time)=>until.default.setTimer(time),
+            setTimer:(time)=>until.setTimer(time),
         },
         mounted:function(){
             const that =this
@@ -47,7 +49,19 @@
             .then((res)=>that.collect=res.data.data)
             .catch((err)=>console.log(err))
         },
-        components:{'SlideBar':require('./../common/SlideBar.vue'),'List':require('./../common/List.vue')}
+        watch:{
+            author:function(){
+                const that =this
+                this.$http({url:"https://cnodejs.org/api/v1/user/"+this.$route.query.author,method:'get'})
+                .then((res)=>{
+                    that.author = res.data.data;
+                    return that.$http({url:"https://cnodejs.org/api/v1/topic_collect/"+this.$route.query.author,method:'get'})
+                    })
+                .then((res)=>that.collect=res.data.data)
+                .catch((err)=>console.log(err))
+                }
+        },
+        components:{SlideBar,List}
     }
 </script>
 <style>

@@ -34,14 +34,16 @@
   </div>
 </template>
 <script>
-    const until = require('./../until/until.js');
-    module.exports={
-        data:function(){
+    import until from './../until/until.js';
+    import SlideBar from './../common/SlideBar.vue'
+    import Reply from './../common/Reply.vue'
+    export default{
+        data(){
             return {replyData:''}
         },
         methods:{
-            setTimer:(time)=>until.default.setTimer(time),
-            getAllName:(tab)=>until.default.getAllName(tab),
+            setTimer:(time)=>until.setTimer(time),
+            getAllName:(tab)=>until.getAllName(tab),
         },
         created:function(){
             const that = this;
@@ -49,7 +51,7 @@
             .then((res)=>that.replyData=res.data.data)
             .catch((err)=>console.log(err))
         },
-        components:{'SlideBar':require('./../common/SlideBar.vue'),'Reply':require('./../common/Reply.vue')}
+        components:{SlideBar,Reply}
     }
 </script>
 <style>

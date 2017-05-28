@@ -12,8 +12,10 @@
     </div>
 </template>
 <script>
-    module.exports={
-        data:function(){
+    import SlideBar from './../common/SlideBar.vue'
+    import List from './../common/List.vue'
+    export default{
+        data(){
             return {collections:'',author:this.$route.query.loginname}
         },
         mounted:function(){
@@ -22,7 +24,7 @@
             .then((res)=>that.collections=res.data.data)
             .catch((err)=>console.log(err))
         },
-        components:{'SlideBar':require('./../common/SlideBar.vue'),'List':require('./../common/List.vue')}
+        components:{SlideBar,List}
     }
 </script>
 <style>

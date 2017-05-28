@@ -6,7 +6,7 @@
             <div class="listHeader">
               <a v-for="(typeItem,i) in type" :class="i==defaultActive?'activeTypeBtn':''" class="typeBtn" href="javascript:void(0)" @click="changeActive(i,typeItem.tab)">{{typeItem.name}}</a>
             </div>
-            <List :list="list"></List>
+            <List :list="pageVal.List"></List>
           <Pages v-on:getIndex='getPageIndex' :pageVal="pageVal" ref="pageControl"></Pages>
         </div>
       </div>
@@ -14,43 +14,40 @@
 </template>
 
 <script>
-module.exports = {
-  data :function() {
+import Pages from './../common/Page.vue'
+import SlideBar from './../common/SlideBar.vue'
+import List from './../common/List.vue'
+import {mapGetters,mapActions} from 'vuex'
+export default {
+  data () {
     return {
       type:[{name:'全部',tab:""},{name:'精华',tab:"good"},{name:'分享',tab:'share'},{name:'问答',tab:'ask'},{name:'招聘',tab:'job'}],
-      defaultActive:0,
-      list:[],
-      pageVal:{current:1,allPage:400}
     }
   },
-  vuex:{
-    
-  }
-  ,
+  computed:{
+      ...mapGetters(['current','pageVal','defaultActive']),
+  },
   methods:{
+      ...mapActions(['changeType','goPage','initList']),
     changeActive:function(index,tab,page){
       page = page || 1; 
-      var that =this;
-      that.defaultActive =index;
-      that.$http({method:'get',url:'https://cnodejs.org/api/v1/topics',params:{page:page,tab:tab,limit:40,mdrender:"false"}})
-      .then((res)=>{that.list = res.data.data;})
-      .catch((error)=>console.log(error));
-      this.$refs.pageControl.firstPage();
+      const obj={index:index,tab:tab,page:tab}
+      this.changeType(obj)
     },
     getPageIndex:function(data){
-      var that =this;
-      that.$http({method:'get',url:'https://cnodejs.org/api/v1/topics',params:{page:data.current,tab:this.type[that.defaultActive].tab,limit:40,mdrender:"false"}})
-      .then((res)=>{that.list = res.data.data;})
-      .catch((error)=>console.log(error));
+      data.tab=this.type[data.defaultActive].tab
+      this.goPage(data)
     }
   },
-  created:function(){
-      var that =this;
-      that.$http({method:'get',url:'https://cnodejs.org/api/v1/topics',params:{page:1,tab:'',limit:40,mdrender:"false"}})
-      .then((res)=>{that.list = res.data.data;})
-      .catch((error)=>console.log(error));
+  mounted:function(){
+     this.initList();
   },
-  components:{'Pages':require('./../common/Page.vue'),'SlideBar':require('./../common/SlideBar.vue'),'List':require('./../common/List.vue')}
+  watch:{
+     defaultActive:function(){
+      this.$refs.pageControl.firstPage();
+     }
+  },
+  components:{Pages,SlideBar,List}
 }
 </script>
 

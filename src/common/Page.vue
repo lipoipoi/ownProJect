@@ -16,7 +16,7 @@
         },
         props:["pageVal"],
         methods:{
-           firstPage:function(){
+           firstPage:function(data){
                this.pageArr=this.pageArr.map((item,i)=>{return item=i+1})
                this.pageVal.current=1;
                 this.$emit('getIndex',this.pageVal);
