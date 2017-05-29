@@ -27,7 +27,7 @@
                             </div>
                         </div>
                     </div>
-                    <Reply :id='replyData.id' :replyCount="replyData.reply_count" :replyData="replyData.replies"></Reply>
+                    <Reply v-on:initReply="getInitPage" :id='replyData.id' :replyCount="replyData.reply_count" :replyData="replyData.replies"></Reply>
                 </div> 
              </div>
       </div>
@@ -44,6 +44,12 @@
         methods:{
             setTimer:(time)=>until.setTimer(time),
             getAllName:(tab)=>until.getAllName(tab),
+            getInitPage:function(){
+                const that = this;
+                this.$http({url:'https://cnodejs.org/api/v1/topic/'+this.$route.query.id,method:'get',params:{mdrender:true}})
+                .then((res)=>that.replyData=res.data.data)
+                .catch((err)=>console.log(err))
+            }
         },
         created:function(){
             const that = this;

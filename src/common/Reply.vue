@@ -44,15 +44,19 @@
         },
         methods:{
             setTimer:(time)=>until.setTimer(time),
-            commit:function(){
+            commit:function(){ 
+                const that = this;
                 const obj={accesstoken:this.token,content:this.commitData,reply_id:this.id}
-                console.log(obj);
-                this.$http({
-                    method:'post',
-                    url:'https://cnodejs.org/api/v1/topic/'+this.id+'/replies',
-                    params:obj,
-                })
-                .then((res)=>{console.log(res)})
+                this.$http.post('https://cnodejs.org/api/v1/topic/'+this.id+'/replies',
+                    obj, 
+                )
+                .then((res)=>{
+                         that.$http({url:'https://cnodejs.org/api/v1/topic/'+that.id,method:'get',params:{mdrender:true}})
+                         .then((res)=>{
+                             that.$emit("initReply")
+                             that.commitData='';
+                        })
+                    })
                 .catch((error)=>console.log(error));
             }
         },
