@@ -33,9 +33,7 @@
         },
         watch:{
             isLogin:function(newVal,oldVal){
-                if(newVal){
                     this.$router.push({path:'/'})
-                }
             }
         },
         components:{SlideBar}
