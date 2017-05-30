@@ -9,9 +9,12 @@
                          </router-link>
                     </div>
                     <div class="user_profile">
-                        <p class="score">0 积分</p>
+                        <p class="score">积分 {{score}}</p>
                     </div>
                 </div>
+              </div>
+              <div class="panel" v-if="isLogin">
+                  <router-link  :to="{path:'AddTopic'}" class="addTopic">发布话题</router-link>
               </div>
               <div class="panel ads">
                   <a href="http://www.ucloud.cn/site/active/gift.html?utm_source=cnodejs&amp;utm_medium=content_pic_pc&amp;utm_campaign=multicloud&amp;utm_content=gift&amp;ytag=cnodejs" target="_blank" class="banner sponsor_outlink" data-label="ucloud-banner">
@@ -68,11 +71,27 @@
     import { mapGetters,mapActions} from 'vuex'
     export default{
         data(){
-            return{}
+            return{score:''}
         },
         computed:{
-            ...mapGetters(['isLogin','userInfo']),
+            ...mapGetters(['isLogin','userInfo','loginname']),
         },
+        mounted:function(){
+                if(this.loginname){
+                    const that =this;
+                    this.$http({url:"https://cnodejs.org/api/v1/user/"+this.loginname,method:'get'})
+                    .then((res)=>that.score = res.data.data.score)
+                    .catch((err)=>console.log(err))
+                }
+        },
+        watch:{
+            loginname:function(){
+                const that =this;
+                this.$http({url:"https://cnodejs.org/api/v1/user/"+this.loginname,method:'get'})
+                .then((res)=>that.score = res.data.data.score)
+                .catch((err)=>console.log(err))
+            }
+        }
     }
 </script>
 <style>
@@ -186,5 +205,23 @@
 .penal .otherInfo{
     color: #778087;
     text-decoration: none;
+}
+.panel  .addTopic{
+    color: #fff;
+    border-radius: 3px;
+    background-color: #80bd01;
+    border: none;
+    display: inline-block;
+    float: none;
+    padding: 3px 10px;
+    margin: 0;
+    font-size: 14px;
+    transition: all .2s ease-in-out;
+    letter-spacing: 2px;
+    box-shadow: none;
+    line-height: 2em;
+    vertical-align: middle;
+    color: #fff;
+    cursor: pointer;
 }
 </style>

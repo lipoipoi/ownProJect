@@ -34,23 +34,25 @@
     import List from './../common/List.vue';
     export default{
         data(){
-            return{author:'',collect:''}
+            return{author:'',collect:'',newAuthor:''}
         },
         methods:{
             setTimer:(time)=>until.setTimer(time),
         },
         mounted:function(){
-            const that =this
-            this.$http({url:"https://cnodejs.org/api/v1/user/"+this.$route.query.author,method:'get'})
+            const that =this;
+            const router =this.$route.query.author;
+            this.$http({url:"https://cnodejs.org/api/v1/user/"+router,method:'get'})
             .then((res)=>{
                 that.author = res.data.data;
-                return that.$http({url:"https://cnodejs.org/api/v1/topic_collect/"+this.$route.query.author,method:'get'})
+                that.newAuthor = res.data.data
+                 that.$http({url:"https://cnodejs.org/api/v1/topic_collect/"+router,method:'get'})
+                .then((res)=>that.collect=res.data.data)
                 })
-            .then((res)=>that.collect=res.data.data)
             .catch((err)=>console.log(err))
         },
         watch:{
-            author:function(){
+           $route:function(a,b){
                 const that =this
                 this.$http({url:"https://cnodejs.org/api/v1/user/"+this.$route.query.author,method:'get'})
                 .then((res)=>{

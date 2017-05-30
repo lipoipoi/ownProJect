@@ -6,6 +6,7 @@
                     <input type="text" name="q" value="" class="search">
                     <ul class="pullList">
                         <li ><router-link to="/">首页</router-link></li>
+                        <li v-if="isLogin"><router-link to="/Message">未读消息</router-link></li>
                         <li v-if="isLogin"><a @click='loginOut' href="javascript:void(0)" >注销</a></li>
                         <li v-else><router-link to="/login">登录</router-link></li>
                     </ul>

@@ -24,6 +24,13 @@ export default {
     if(token){
       this.goLogin(token)
     }
+  },
+  watch:{
+    $route:function(){
+      console.log("1")
+      document.body.scrollTop = 0
+      document.documentElement.scrollTop = 0
+    }
   }
 
 }

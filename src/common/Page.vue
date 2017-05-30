@@ -20,12 +20,16 @@
                this.pageArr=this.pageArr.map((item,i)=>{return item=i+1})
                this.pageVal.current=1;
                 this.$emit('getIndex',this.pageVal);
+                document.body.scrollTop = 0
+                document.documentElement.scrollTop = 0
             },
            lastPage:function(){
                const that = this;
                this.pageArr=this.pageArr.map((item,i)=>item=that.pageVal.allPage-(that.pageArr.length-i-1));
                this.pageVal.current=this.pageVal.allPage;
                 this.$emit('getIndex',this.pageVal);
+                document.body.scrollTop = 0
+                document.documentElement.scrollTop = 0
             },
            goto:function(current){
                const that = this;
@@ -44,6 +48,9 @@
                       this.pageArr =this.pageArr.map((item,i)=>{return i<=arrMiddle?item=current-(arrMiddle-i-1):item=current+(i-arrMiddle+1)}) 
                    }
                }
+               
+                document.body.scrollTop = 0
+                document.documentElement.scrollTop = 0
                 this.$emit('getIndex',this.pageVal);
             }
         }   

@@ -25,6 +25,7 @@ const getters={
   // 用户state
    token:(state)=>state.user.userInfo.accessToken,
    isLogin:(state)=>state.user.isLogin,
+   loginname:(state)=>state.user.userInfo.loginname,
    userInfo:(state)=>state.user.userInfo,
   //  List state
    current:(state)=>state.list.current,

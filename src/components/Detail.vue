@@ -18,7 +18,10 @@
                                 <span>作者 {{replyData.author?replyData.author.loginname:''}}</span>
                                 <span>{{replyData.visit_count}} 次浏览</span>
                                 <span>最后一次编辑是 {{setTimer(replyData.last_reply_at)}}</span>
-                                <span>来自 {{getAllName(replyData.tab)}}</span>
+                                <span>来自 {{getAllName(replyData.tab)}}</span><br/>
+                                <!--<span class="del" v-if="isSelf"><a @click="delTopic" href="javascript:void(0)">删除</a></span>-->
+                                <span class="del" v-if="isCollect"><a v-if="isLogin" @click="delCollect" href="javascript:void(0)" class="collect_btn">取消收藏</a></span>
+                                <span class="del" v-else ><a v-if="isLogin" @click="getCollect" href="javascript:void(0)" class="collect_btn">收藏</a></span>
                             </div>
                         </div>
                         <div class="innerTopic">
@@ -36,10 +39,14 @@
 <script>
     import until from './../until/until.js';
     import SlideBar from './../common/SlideBar.vue'
-    import Reply from './../common/Reply.vue'
+    import Reply from './../common/Reply.vue';
+    import {mapGetters} from 'vuex'
     export default{
         data(){
-            return {replyData:''}
+            return {replyData:'',collects:'',isCollect:false,isSelf:false}
+        },
+        computed:{
+            ...mapGetters(['isLogin','token','loginname','userInfo'])
         },
         methods:{
             setTimer:(time)=>until.setTimer(time),
@@ -49,13 +56,62 @@
                 this.$http({url:'https://cnodejs.org/api/v1/topic/'+this.$route.query.id,method:'get',params:{mdrender:true}})
                 .then((res)=>that.replyData=res.data.data)
                 .catch((err)=>console.log(err))
+            },
+            getCollect:function(){
+                const that =this;
+                this.$http.post("https://cnodejs.org/api/v1/topic_collect/collect",{accesstoken:this.token,topic_id:this.replyData.id})
+                .then((res)=>that.isCollect=true)
+                .catch((err)=>console.log(err))
+            },
+            delCollect:function(){
+                const that =this;
+                this.$http.post("https://cnodejs.org/api/v1/topic_collect/de_collect",{accesstoken:this.token,topic_id:this.replyData.id})
+                .then((res)=>that.isCollect=false)
+                .catch((err)=>console.log(err))
+            },
+            delTopic:function(){
+                const that =this;
+                const obj={reply_id:this.replyData.id,accesstoken:this.token}
+                this.$http.post("https://cnodejs.org/api/v1/reply/"+this.replyData.id+"/delete",obj)
+                .then((res)=>console.log(res))
+                .catch((err)=>console.log(err))
             }
         },
-        created:function(){
+        mounted:function(){
             const that = this;
             this.$http({url:'https://cnodejs.org/api/v1/topic/'+this.$route.query.id,method:'get',params:{mdrender:true}})
-            .then((res)=>that.replyData=res.data.data)
+            .then((res)=>{
+                that.replyData=res.data.data;
+                    that.userInfo.id == that.replyData.author_id?that.isSelf=true:that.isSelf=false;
+            })
             .catch((err)=>console.log(err))
+            if(this.loginname){
+            this.$http({url:"https://cnodejs.org/api/v1/topic_collect/"+this.loginname,method:'get'})
+             .then((res)=>{
+                 that.collects=res.data.data;
+                 that.collects.find((item)=>item.id==that.$route.query.id)!=undefined?that.isCollect=true:that.isCollect=false
+            })
+            .catch((err)=>console.log(err));
+
+            }
+            // 
+        },
+        watch:{
+            loginname:function(newVal,oldVal){
+                const that =this;
+                this.$http({url:'https://cnodejs.org/api/v1/topic/'+this.$route.query.id,method:'get',params:{mdrender:true}})
+                .then((res)=>{
+                    that.replyData=res.data.data;
+                    that.userInfo.id == that.replyData.author_id?that.isSelf=true:that.isSelf=false;
+                })
+                .catch((err)=>console.log(err))
+                this.$http({url:"https://cnodejs.org/api/v1/topic_collect/"+this.loginname,method:'get'})
+                .then((res)=>{
+                that.collects=res.data.data
+                 that.collects.find((item)=>item.id==that.$route.query.id)!=undefined?that.isCollect=true:that.isCollect=false
+                })
+                .catch((err)=>console.log(err));
+            }
         },
         components:{SlideBar,Reply}
     }
@@ -86,6 +142,7 @@
     line-height: 1em;
     padding: 0px 0px 10px 0;
     border-bottom: 1px solid #e5e5e5;
+        overflow: hidden;
 }
 .topic_full_title{
     font-size: 22px;
@@ -107,12 +164,21 @@
     color: #fff;
     font-size: 12px;
 }
+.topic_tab>.del::before{
+    content:""
+}
 .topic_tab>span::before{
     content:"• "
 }
 .topic_tab>span{
     font-size: 12px;
     color: #838383;
+}
+.topic_tab>.del a{
+    color: #08c;
+    font-size:14px;
+    margin-top: 15px;
+    display: inline-block;
 }
 .innerTopic{
     font-size: 14px;
@@ -125,5 +191,21 @@
 }
 .topic_content{
     margin: 0 10px;
+}
+.topic_tab>.del .collect_btn{
+    float: right;
+    color: #fff;
+    background-color: #6ba44e;
+     border-radius: 3px;
+     border: none;
+    display: inline-block;
+    padding: 3px 10px;
+    margin: 0;
+    font-size: 14px;
+    transition: all .2s ease-in-out;
+    letter-spacing: 2px;
+    box-shadow: none;
+    line-height: 2em;
+    vertical-align: middle;
 }
 </style>

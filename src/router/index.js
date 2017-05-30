@@ -22,6 +22,12 @@ export default new Router({
     },
     {
         path: '/Collections', component: require('@/components/Collections.vue')
+    },
+    {
+        path: '/Message', component: require('@/components/Message.vue')
+    },
+    {
+        path: '/AddTopic', component: require('@/components/AddTopic.vue')
     }
   ]
 })
